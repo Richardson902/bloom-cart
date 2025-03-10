@@ -1,0 +1,51 @@
+services:
+  bloom-cart-db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: topsecret
+    ports:
+      - 5432:5432
+    volumes:
+      - bloom-cart-app:/var/lib/postgresql/data
+  bloom-cart-client:
+    image: client
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: ./frontend/
+        target: /usr/src/app/
+      - type: volume
+        target: /usr/src/app/node_modules
+      - type: bind
+        source: ./frontend/vite.config.js
+        target: /usr/src/app/vite.config.js
+    ports:
+      - 5173:5173
+  bloom-cart-nginx:
+    image: bloom-cart-nginx
+    restart: unless-stopped
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile.prod
+    ports:
+      - 8085:80
+  bloom-cart-api:
+    image: bloom-cart-api
+    restart: unless-stopped
+    depends_on:
+      - bloom-cart-db
+    build:
+      context: ./api/
+      dockerfile: ./Dockerfile
+    ports:
+      - 8081:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://bloom-cart-db:5432/postgres
+      SPRING_DATASOURCE_PASSWORD: topsecret
+      SPRING_DATASOURCE_USER: postgres
+      API_VERSION: dev
+volumes:
+  bloom-cart-app:
