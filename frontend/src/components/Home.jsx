@@ -7,21 +7,53 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get(`/api/products`);
-        setProducts(response.data);
-        console.log(response.data);
+        // First, fetch all products
+        const response = await axios.get("/api/products");
+        const productsData = response.data;
+
+        // Then, fetch images for each product
+        const updatedProducts = await Promise.all(
+          productsData.map(async (product) => {
+            try {
+              const imageResponse = await axios.get(
+                `/api/products/${product.id}/image`,
+                { responseType: "blob" }
+              );
+              const imageUrl = URL.createObjectURL(imageResponse.data);
+              return { ...product, imageUrl };
+            } catch (error) {
+              console.error(
+                "Error fetching image for product ID:",
+                product.id,
+                error
+              );
+              return { ...product, imageUrl: "/placeholder-image.jpg" };
+            }
+          })
+        );
+
+        setProducts(updatedProducts);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching products:", error);
         setIsError(true);
-      } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
+    fetchProducts();
+
+    // Cleanup function to revoke object URLs to avoid memory leaks
+    return () => {
+      products.forEach((product) => {
+        if (product.imageUrl && product.imageUrl.startsWith("blob:")) {
+          URL.revokeObjectURL(product.imageUrl);
+        }
+      });
+    };
+  }, []); // No dependency on data anymore
 
   if (isError) {
     return (
@@ -41,7 +73,7 @@ function Home() {
     return (
       <div className="container text-center my-5">
         <div className="spinner-border text-bloom-primary" role="status">
-          <span className="visibility-hidden">Loading...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -61,29 +93,44 @@ function Home() {
       </div>
 
       <div className="row g-4">
-        {products.map((product) => (
-          <div key={product.id} className="col-md-6 col-lg-4">
-            <div className="card h-100 border-bloom-secondary shadow-sm">
-              <p>Image here</p>
-              <div className="card-body bg-bloom-light">
-                <h5 className="card-title text-bloom-primary">
-                  {product.name}
-                </h5>
-                <p className="card-text text-muted small">
-                  {product.description}
-                </p>
-                <div className="d-flex justify-content-between align-items-center">
-                  <span className="fw-bold text-bloom-dark">
-                    ${product.price}
-                  </span>
-                  <button className="btn btn-bloom-primary btn-sm">
-                    Add to Cart
-                  </button>
+        {products.length === 0 ? (
+          <div className="col-12 text-center">
+            <p className="text-muted">
+              No flowers available at the moment. Please check back soon!
+            </p>
+          </div>
+        ) : (
+          products.map((product) => (
+            <div key={product.id} className="col-md-6 col-lg-4">
+              <div className="card h-100 border-bloom-secondary shadow-sm">
+                {product.imageUrl && (
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="card-img-top"
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
+                )}
+                <div className="card-body bg-bloom-light">
+                  <h5 className="card-title text-bloom-primary">
+                    {product.name}
+                  </h5>
+                  <p className="card-text text-muted small">
+                    {product.description}
+                  </p>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span className="fw-bold text-bloom-dark">
+                      ${product.price}
+                    </span>
+                    <button className="btn btn-bloom-primary btn-sm">
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
