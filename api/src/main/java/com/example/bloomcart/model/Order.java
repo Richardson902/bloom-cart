@@ -22,10 +22,6 @@ public class Order {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     private String recipientName;
     private String street;
     private String city;
@@ -34,20 +30,11 @@ public class Order {
     private String phoneNumber;
     private LocalDateTime deliveryDate;
     private BigDecimal totalPrice = BigDecimal.ZERO;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private String status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
-    public enum Status {
-        PENDING,
-        PROCESSING,
-        OUT_FOR_DELIVERY,
-        DELIVERED,
-        CANCELLED
-    }
 
 
 }

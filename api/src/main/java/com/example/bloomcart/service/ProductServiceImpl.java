@@ -53,13 +53,6 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductDto> getProductsByCategory(String category) {
-        return productRepository.findByCategory(category).stream()
-                .map(productMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public ProductDto updateProductInfo(Long id, ProductDto productDto, MultipartFile imageFile) throws IOException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));

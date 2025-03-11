@@ -11,7 +11,6 @@ public interface ProductService {
     ProductDto createNewProduct(ProductDto productDto, MultipartFile image) throws IOException;
     ProductDto getProductById(Long id);
     List<ProductDto> getAllProducts();
-    List<ProductDto> getProductsByCategory(String category);
     ProductDto updateProductInfo(Long id, ProductDto productDto, MultipartFile image) throws IOException;
     ProductDto updateProductStock(Long id, ProductDto productDto);
     void deleteProduct(Long id);

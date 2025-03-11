@@ -7,7 +7,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - bloom-cart-db:/var/lib/postgresql/data
+      - bloom-cart-test-data:/var/lib/postgresql/data
 
 volumes:
-  bloom-cart-db:
+  bloom-cart-test-data:

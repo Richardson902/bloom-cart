@@ -10,7 +10,6 @@ import java.util.Set;
 @Data
 public class OrderDto {
     private Long id;
-    private Long userId;
     private String recipientName;
     private String street;
     private String city;
@@ -19,6 +18,6 @@ public class OrderDto {
     private String phoneNumber;
     private LocalDateTime deliveryDate;
     private BigDecimal totalPrice;
-    private Order.Status status;
+    private String status;
     private Set<OrderItemDto> orderItems;
 }

@@ -1,11 +1,9 @@
 package com.example.bloomcart.controller;
 
 import com.example.bloomcart.dto.ProductDto;
-import com.example.bloomcart.model.Product;
 import com.example.bloomcart.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -55,13 +53,6 @@ public class ProductController {
     public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long id) {
         ProductDto product = productService.getProductById(id);
         return ResponseEntity.ok(product);
-    }
-
-    @GetMapping("/category/{category}")
-    @Operation(summary = "Get products by category")
-    public ResponseEntity<List<ProductDto>> getProductsByCategory(@PathVariable("category") String category) {
-        List<ProductDto> products = productService.getProductsByCategory(category);
-        return ResponseEntity.ok(products);
     }
 
     @PutMapping("/{id}")
