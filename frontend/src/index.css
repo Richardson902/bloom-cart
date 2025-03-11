@@ -1,11 +1,22 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Flower shop theme colors */
+  --bloom-primary: #e84a8a; /* Bright pink */
+  --bloom-secondary: #8fd16f; /* Soft green */
+  --bloom-success: #5aaa68; /* Dark green */
+  --bloom-info: #70c1d9; /* Light blue */
+  --bloom-warning: #f9c74f; /* Soft yellow */
+  --bloom-danger: #f25c54; /* Coral red */
+  --bloom-light: #f9f4f5; /* Soft pink/white */
+  --bloom-dark: #594157; /* Deep purple */
+
+  /* Original styling */
+  font-family: "Open Sans", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--bloom-dark);
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,26 +24,116 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Bootstrap color utility classes */
+.bg-bloom-primary {
+  background-color: var(--bloom-primary) !important;
+}
+.bg-bloom-secondary {
+  background-color: var(--bloom-secondary) !important;
+}
+.bg-bloom-success {
+  background-color: var(--bloom-success) !important;
+}
+.bg-bloom-info {
+  background-color: var(--bloom-info) !important;
+}
+.bg-bloom-warning {
+  background-color: var(--bloom-warning) !important;
+}
+.bg-bloom-danger {
+  background-color: var(--bloom-danger) !important;
+}
+.bg-bloom-light {
+  background-color: var(--bloom-light) !important;
+}
+.bg-bloom-dark {
+  background-color: var(--bloom-dark) !important;
+}
+
+.text-bloom-primary {
+  color: var(--bloom-primary) !important;
+}
+.text-bloom-secondary {
+  color: var(--bloom-secondary) !important;
+}
+.text-bloom-success {
+  color: var(--bloom-success) !important;
+}
+.text-bloom-info {
+  color: var(--bloom-info) !important;
+}
+.text-bloom-warning {
+  color: var(--bloom-warning) !important;
+}
+.text-bloom-danger {
+  color: var(--bloom-danger) !important;
+}
+.text-bloom-light {
+  color: var(--bloom-light) !important;
+}
+.text-bloom-dark {
+  color: var(--bloom-dark) !important;
+}
+
+.border-bloom-primary {
+  border-color: var(--bloom-primary) !important;
+}
+.border-bloom-secondary {
+  border-color: var(--bloom-secondary) !important;
+}
+
+/* Custom button styles */
+.btn-bloom-primary {
+  background-color: var(--bloom-primary);
+  color: white;
+  border: none;
+}
+
+.btn-bloom-primary:hover {
+  background-color: #d03878;
+  color: white;
+}
+
+.btn-bloom-secondary {
+  background-color: var(--bloom-secondary);
+  color: white;
+  border: none;
+}
+
+.btn-bloom-secondary:hover {
+  background-color: #7aba5f;
+  color: white;
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--bloom-primary);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #d03878;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #fefefe;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Playfair Display", serif;
+  line-height: 1.1;
 }
 
 h1 {
   font-size: 3.2em;
-  line-height: 1.1;
+  color: var(--bloom-primary);
 }
 
 button {
@@ -42,27 +143,33 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--bloom-secondary);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--bloom-primary);
+  background-color: #7aba5f;
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto var(--bloom-primary);
 }
 
-@media (prefers-color-scheme: light) {
+/* Spinner with themed color */
+.spinner-border.text-bloom-primary {
+  color: var(--bloom-primary);
+}
+
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
   }
   a:hover {
-    color: #747bff;
+    color: #f57bab;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: var(--bloom-primary);
   }
 }
