@@ -167,9 +167,7 @@ function AddProduct() {
                     <option value="bouquets">Bouquets</option>
                     <option value="arrangements">Arrangements</option>
                     <option value="single-flowers">Single Flowers</option>
-                    <option value="plants">Plants</option>
                     <option value="gifts">Gift Baskets</option>
-                    <option value="seasonal">Seasonal</option>
                   </select>
                 </div>
 
