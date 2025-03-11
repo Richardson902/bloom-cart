@@ -28,7 +28,7 @@ public class ReviewController {
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
-    @GetMapping("/products/{productId")
+    @GetMapping("/products/{productId}")
     @Operation(summary = "Get all reviews for a product")
     public ResponseEntity<List<ReviewDto>> getReviewsByProductId(@PathVariable("productId") Long productId) {
         List<ReviewDto> reviews = reviewService.getReviewsByProductId(productId);

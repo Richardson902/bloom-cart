@@ -8,9 +8,6 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface OrderMapper {
-    @Mapping(source = "user.id", target = "userId")
     OrderDto toDto(Order order);
-
-    @Mapping(target = "user", ignore = true)
     Order toEntity(OrderDto orderDto);
 }
