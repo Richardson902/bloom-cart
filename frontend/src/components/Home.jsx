@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function Home() {
+function Home({ selectedCategory }) {
   const [products, setProducts] = useState([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -9,7 +9,6 @@ function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setIsLoading(true);
         // First, fetch all products
         const response = await axios.get("/api/products");
         const productsData = response.data;
@@ -56,6 +55,25 @@ function Home() {
     };
   }, []); // No dependency on data anymore
 
+  const filteredProducts = selectedCategory
+    ? products.filter((product) => product.category === selectedCategory)
+    : products;
+
+  const getCategoryHeading = () => {
+    switch (selectedCategory) {
+      case "bouquets":
+        return "collection of stunning bouquets";
+      case "arrangements":
+        return "collection of elegant arrangements";
+      case "single-flowers":
+        return "collection of beautiful single flowers";
+      case "gifts":
+        return "collection of delightful gift baskets";
+      default:
+        return "handpicked selection of beautiful blooms";
+    }
+  };
+
   if (isError) {
     return (
       <div className="container text-center my-5">
@@ -88,20 +106,20 @@ function Home() {
             Bloom Cart Flower Shop
           </h1>
           <p className="lead text-center mb-5">
-            Discover our handpicked selection of beautiful blooms
+            Discover our {getCategoryHeading(selectedCategory)}
           </p>
         </div>
       </div>
 
       <div className="row g-4">
-        {products.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <div className="col-12 text-center">
             <p className="text-muted">
               No flowers available at the moment. Please check back soon!
             </p>
           </div>
         ) : (
-          products.map((product) => (
+          filteredProducts.map((product) => (
             <div key={product.id} className="col-md-6 col-lg-4">
               <div className="card h-100 border-bloom-secondary shadow-sm">
                 {product.imageUrl && (
