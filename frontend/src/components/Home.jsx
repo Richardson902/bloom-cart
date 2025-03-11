@@ -9,6 +9,7 @@ function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setIsLoading(true);
         // First, fetch all products
         const response = await axios.get("/api/products");
         const productsData = response.data;
