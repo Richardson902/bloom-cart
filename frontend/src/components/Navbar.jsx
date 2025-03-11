@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Navbar({ setSelectedCategory }) {
+function Navbar({ setSelectedCategory, cartItemCount = 0 }) {
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
@@ -107,9 +107,11 @@ function Navbar({ setSelectedCategory }) {
             <li className="nav-item">
               <Link to="/cart" className="nav-link position-relative">
                 Cart
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-bloom-primary">
-                  0
-                </span>
+                {cartItemCount > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-bloom-primary">
+                    {cartItemCount}
+                  </span>
+                )}
               </Link>
             </li>
           </ul>
