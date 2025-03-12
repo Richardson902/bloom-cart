@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public List<OrderDto> getAllOrders() {
-        return orderRepository.finaAllByClosestDeliveryDate().stream()
+        return orderRepository.findAllByClosestDeliveryDate().stream()
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
     }
