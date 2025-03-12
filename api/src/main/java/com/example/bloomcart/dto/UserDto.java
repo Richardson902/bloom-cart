@@ -26,5 +26,5 @@ public class UserDto {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    private User.Role role;
+    private String role;
 }

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,18 +31,21 @@ public class OrderController {
 
     @GetMapping
     @Operation(summary = "Get all orders")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AGENT')")
     public ResponseEntity<List<OrderDto>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get an order by ID")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AGENT')")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
     @PutMapping("/{id}/status")
     @Operation(summary = "Update an order's status by ID")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AGENT')")
     public ResponseEntity<OrderDto> updateOrderStatus(
             @PathVariable Long id,
             @RequestBody String status) {

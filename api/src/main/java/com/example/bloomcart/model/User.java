@@ -22,11 +22,5 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.CUSTOMER;
-
-    public enum Role {
-        CUSTOMER, DELIVERY_AGENT, ADMIN
-    }
+    private String role;
 }

@@ -5,6 +5,7 @@ import com.example.bloomcart.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -23,6 +24,7 @@ public class ReviewController {
 
     @PostMapping("/products/{productId}")
     @Operation(summary = "Create a new review")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<ReviewDto> createReview(@PathVariable("productId") Long productId, @RequestBody ReviewDto reviewDto) {
         ReviewDto createdReview = reviewService.createReview(productId, reviewDto);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
