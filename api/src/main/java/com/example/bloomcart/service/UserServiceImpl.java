@@ -6,22 +6,16 @@ import com.example.bloomcart.mapper.UserMapper;
 import com.example.bloomcart.model.User;
 import com.example.bloomcart.repository.UserRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -36,9 +30,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        String email = userDto.getEmail();
+
+        User isEmailExist = userRepository.findByEmail(email);
+        if (isEmailExist != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+        }
+
         User user = userMapper.toEntity(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setRole("CUSTOMER");
         User savedUser = userRepository.save(user);
+
+
         return userMapper.toDto(savedUser);
     }
 
@@ -89,23 +93,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByEmail(username);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authorities);
-
     }
 }
