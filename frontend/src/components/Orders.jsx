@@ -7,10 +7,33 @@ function Orders() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedOrders, setExpandedOrders] = useState({});
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      setUpdating(true);
+      await axios.put(`/api/orders/${orderId}/status`, newStatus, {
+        headers: {
+          "Content-Type": "text/plain",
+        },
+      });
+
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      alert("Failed to update order status. Please try again.");
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const fetchOrders = async () => {
     try {
@@ -40,7 +63,7 @@ function Orders() {
 
   return (
     <div className="container my-5">
-      <h1 className="mb-4 text-bloom-primary">My Orders</h1>
+      <h1 className="mb-4 text-bloom-primary">Orders</h1>
 
       {loading ? (
         <div className="text-center py-5">
@@ -104,11 +127,37 @@ function Orders() {
                   </div>
                   <div className="col-md-2">
                     <span className="fw-bold d-block d-md-none">Status:</span>
-                    <span
-                      className={`badge bg-${getStatusColor(order.status)}`}
-                    >
-                      {order.status}
-                    </span>
+                    {updating ? (
+                      <div
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                      >
+                        <span className="visually-hidden">Updating...</span>
+                      </div>
+                    ) : (
+                      <div className="d-flex align-items-center">
+                        <span
+                          className={`badge bg-${getStatusColor(
+                            order.status
+                          )} me-2`}
+                        >
+                          {order.status}
+                        </span>
+                        <select
+                          className="form-select form-select-sm"
+                          style={{ maxWidth: "130px" }}
+                          value={order.status}
+                          onChange={(e) =>
+                            updateOrderStatus(order.id, e.target.value)
+                          }
+                        >
+                          <option value="PENDING">PENDING</option>
+                          <option value="PROCESSING">PROCESSING</option>
+                          <option value="DELIVERED">DELIVERED</option>
+                          <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                      </div>
+                    )}
                   </div>
                   <div className="col-md-1 text-end">
                     <button
