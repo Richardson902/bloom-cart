@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,7 +79,18 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public List<OrderDto> getAllOrders() {
-        return orderRepository.findAllByClosestDeliveryDate().stream()
+        List<Order> orders = orderRepository.findAll();
+
+        LocalDate today = LocalDate.now();
+        orders.sort((o1, o2) -> {
+            LocalDate d1 = o1.getDeliveryDate().toLocalDate();
+            LocalDate d2 = o2.getDeliveryDate().toLocalDate();
+            long diff1 = Math.abs(ChronoUnit.DAYS.between(today, d1));
+            long diff2 = Math.abs(ChronoUnit.DAYS.between(today, d2));
+            return Long.compare(diff1, diff2);
+        });
+
+        return orders.stream()
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
     }
