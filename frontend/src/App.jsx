@@ -5,8 +5,12 @@ import AddProduct from "./components/AddProduct";
 import Navbar from "./components/Navbar";
 import Product from "./components/Product";
 import Cart from "./components/Cart";
+import OrderConfirmation from "./components/OrderConfirmation";
+import Orders from "./components/Orders";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
+
+//TODO: Clean up components, refactor into a more clean approach when not on time crunch
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -81,6 +85,8 @@ function App() {
           }
         />
         <Route path="/add_product" element={<AddProduct />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/orders" element={<Orders />} />
       </Routes>
     </BrowserRouter>
   );

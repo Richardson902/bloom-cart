@@ -75,6 +75,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    @Transactional
     public List<OrderDto> getAllOrders() {
         return orderRepository.findAll().stream()
                 .map(orderMapper::toDto)

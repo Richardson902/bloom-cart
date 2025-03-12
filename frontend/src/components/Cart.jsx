@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import CheckoutForm from "./CheckoutForm";
 
 function Cart({ cartItems, updateQuantity, removeItem, clearCart }) {
-  //   const navigate = useNavigate();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   // Calculate cart totals
@@ -12,22 +12,6 @@ function Cart({ cartItems, updateQuantity, removeItem, clearCart }) {
 
   const tax = (subtotal * 0.15).toFixed(2);
   const total = (parseFloat(subtotal) + parseFloat(tax)).toFixed(2);
-
-  //   const handleCheckout = async (e) => {
-  //     e.preventDefault();
-
-  //     try {
-
-  //       alert(
-  //         "Order placed successfully! This will connect to Spring backend later."
-  //       );
-  //       clearCart();
-  //       navigate("/");
-  //     } catch (error) {
-  //       console.error("Checkout failed:", error);
-  //       alert("There was a problem processing your order.");
-  //     }
-  //   };
 
   if (cartItems.length === 0) {
     return (
@@ -139,66 +123,36 @@ function Cart({ cartItems, updateQuantity, removeItem, clearCart }) {
               <h5 className="mb-0">Order Summary</h5>
             </div>
             <div className="card-body">
-              <div className="d-flex justify-content-between mb-2">
-                <span>Subtotal</span>
-                <span>${subtotal}</span>
-              </div>
-              <div className="d-flex justify-content-between mb-2">
-                <span>Tax</span>
-                <span>${tax}</span>
-              </div>
-              <hr />
-              <div className="d-flex justify-content-between fw-bold">
-                <span>Total</span>
-                <span>${total}</span>
-              </div>
-
               {!isCheckingOut ? (
-                <button
-                  className="btn btn-bloom-primary w-100 mt-3"
-                  onClick={() => setIsCheckingOut(true)}
-                >
-                  Proceed to Checkout
-                </button>
-              ) : (
-                <form onSubmit={handleCheckout} className="mt-3">
-                  <div className="mb-3">
-                    <label htmlFor="name" className="form-label">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="name"
-                      required
-                    />
+                <>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>Subtotal</span>
+                    <span>${subtotal}</span>
                   </div>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      required
-                    />
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>Tax</span>
+                    <span>${tax}</span>
                   </div>
-                  <div className="mb-3">
-                    <label htmlFor="address" className="form-label">
-                      Delivery Address
-                    </label>
-                    <textarea
-                      className="form-control"
-                      id="address"
-                      rows="3"
-                      required
-                    ></textarea>
+                  <hr />
+                  <div className="d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span>${total}</span>
                   </div>
-                  <button type="submit" className="btn btn-bloom-primary w-100">
-                    Complete Order
+                  <button
+                    className="btn btn-bloom-primary w-100 mt-3"
+                    onClick={() => setIsCheckingOut(true)}
+                  >
+                    Proceed to Checkout
                   </button>
-                </form>
+                </>
+              ) : (
+                <CheckoutForm
+                  cartItems={cartItems}
+                  subtotal={subtotal}
+                  tax={tax}
+                  total={total}
+                  clearCart={clearCart}
+                />
               )}
             </div>
           </div>
