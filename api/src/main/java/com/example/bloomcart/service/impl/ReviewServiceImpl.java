@@ -1,4 +1,4 @@
-package com.example.bloomcart.service;
+package com.example.bloomcart.service.impl;
 
 import com.example.bloomcart.dto.ReviewDto;
 import com.example.bloomcart.mapper.ReviewMapper;
@@ -6,6 +6,7 @@ import com.example.bloomcart.model.Product;
 import com.example.bloomcart.model.Review;
 import com.example.bloomcart.repository.ProductRepository;
 import com.example.bloomcart.repository.ReviewRepository;
+import com.example.bloomcart.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ReviewServiceImpl implements ReviewService{
+public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;

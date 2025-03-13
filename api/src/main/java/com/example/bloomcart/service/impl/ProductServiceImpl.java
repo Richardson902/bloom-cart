@@ -1,9 +1,10 @@
-package com.example.bloomcart.service;
+package com.example.bloomcart.service.impl;
 
 import com.example.bloomcart.dto.ProductDto;
 import com.example.bloomcart.mapper.ProductMapper;
 import com.example.bloomcart.model.Product;
 import com.example.bloomcart.repository.ProductRepository;
+import com.example.bloomcart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;

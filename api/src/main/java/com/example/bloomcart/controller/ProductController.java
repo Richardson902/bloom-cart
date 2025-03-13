@@ -4,14 +4,9 @@ import com.example.bloomcart.dto.ProductDto;
 import com.example.bloomcart.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,13 +20,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
-    @Operation(summary = "Create a new product")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ProductDto> createProduct(@RequestPart ProductDto productDto, @RequestPart MultipartFile imageFile) throws IOException {
-        ProductDto createdProduct = productService.createNewProduct(productDto, imageFile);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
-    }
 
     @GetMapping("/{id}/image")
     public ResponseEntity<byte[]> getImageByProductId(@PathVariable long id) {
@@ -55,29 +43,5 @@ public class ProductController {
     public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long id) {
         ProductDto product = productService.getProductById(id);
         return ResponseEntity.ok(product);
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update product information")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable("id") Long id, @RequestPart ProductDto productDto, @RequestPart MultipartFile imageFile) throws IOException {
-        ProductDto updatedProduct = productService.updateProductInfo(id, productDto, imageFile);
-        return ResponseEntity.ok(updatedProduct);
-    }
-
-    @PutMapping("/stock{id}")
-    @Operation(summary = "Update product stock quantity")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ProductDto> updateProductStock(@PathVariable("id") Long id, @RequestBody ProductDto productDto) {
-        ProductDto updatedProduct = productService.updateProductStock(id, productDto);
-        return ResponseEntity.ok(updatedProduct);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete product by ID")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
     }
 }

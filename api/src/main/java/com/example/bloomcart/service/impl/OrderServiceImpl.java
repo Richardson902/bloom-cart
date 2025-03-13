@@ -1,4 +1,4 @@
-package com.example.bloomcart.service;
+package com.example.bloomcart.service.impl;
 
 import com.example.bloomcart.dto.OrderDto;
 import com.example.bloomcart.dto.OrderItemDto;
@@ -7,6 +7,7 @@ import com.example.bloomcart.model.Order;
 import com.example.bloomcart.model.OrderItem;
 import com.example.bloomcart.repository.OrderRepository;
 import com.example.bloomcart.repository.ProductRepository;
+import com.example.bloomcart.service.OrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;

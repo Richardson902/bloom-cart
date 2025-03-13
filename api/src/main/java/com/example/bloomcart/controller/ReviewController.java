@@ -24,7 +24,7 @@ public class ReviewController {
 
     @PostMapping("/products/{productId}")
     @Operation(summary = "Create a new review")
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ReviewDto> createReview(@PathVariable("productId") Long productId, @RequestBody ReviewDto reviewDto) {
         ReviewDto createdReview = reviewService.createReview(productId, reviewDto);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
