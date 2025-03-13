@@ -8,6 +8,8 @@ import Cart from "./components/Cart";
 import OrderConfirmation from "./components/OrderConfirmation";
 import Orders from "./components/Orders";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 import "./App.css";
 
 //TODO: Clean up components, refactor into a more clean approach when not on time crunch
@@ -84,6 +86,8 @@ function App() {
             />
           }
         />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
         <Route path="/add_product" element={<AddProduct />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/orders" element={<Orders />} />

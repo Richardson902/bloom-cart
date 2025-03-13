@@ -17,6 +17,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -36,17 +44,39 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/auth/**", "/", "/cart", "/products/**", "/reviews/**").permitAll()
-                        .requestMatchers("/users/**", "/orders/**").hasRole("CUSTOMER")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/orders/**").hasRole("AGENT")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/auth/**", "/api/products/**", "/api/reviews/**").permitAll()
+                        .requestMatchers("/api/users/**", "/api/orders/**").hasRole("CUSTOMER")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/orders/**").hasRole("AGENT")
                 )
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+
+    }
+
+    private CorsConfigurationSource corsConfigurationSource() {
+        return new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                List<String> origins = new ArrayList<>();
+
+                origins.add("http://localhost:5173");
+                origins.add("http://localhost:8085");
+                
+                CorsConfiguration ccfg = new CorsConfiguration();
+                ccfg.setAllowedOrigins(origins);
+                ccfg.setAllowedMethods(Collections.singletonList("*"));
+                ccfg.setAllowCredentials(true);
+                ccfg.setAllowedHeaders(Collections.singletonList("*"));
+                ccfg.setExposedHeaders(Arrays.asList("Authorization"));
+                ccfg.setMaxAge(3600L);
+                return ccfg;
+
+            }
+        };
 
     }
 

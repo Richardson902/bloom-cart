@@ -139,13 +139,13 @@ public class UserServiceImpl implements UserService {
     public void createDefaultAdmin() {
         String adminEmail = "admin@admin.com";
         if (userRepository.findByEmail(adminEmail) == null) {
-            UserDto adminUser = new UserDto();
+            User adminUser = new User();
+            adminUser.setFirstName("Admin");
+            adminUser.setLastName("User");
             adminUser.setEmail(adminEmail);
             adminUser.setPassword(passwordEncoder.encode("admin123"));
-            adminUser.setFirstName("Admin");
-            adminUser.setLastName("Admin");
             adminUser.setRole("ADMIN");
-            createUser(adminUser);
+            userRepository.save(adminUser);
 
         }
     }

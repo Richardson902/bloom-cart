@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function AddProduct() {
   const [product, setProduct] = useState({
@@ -11,6 +13,39 @@ function AddProduct() {
   });
   const [image, setImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    try {
+      const decodedToken = jwtDecode(token);
+
+      console.log(decodedToken);
+
+      const userRole = decodedToken.role || decodedToken.authorities;
+      const isAdmin =
+        userRole === "ROLE_ADMIN" ||
+        (Array.isArray(userRole) && userRole.includes("ROLE_ADMIN"));
+
+      if (!isAdmin) {
+        setError("You don't have permission to access this page");
+        setTimeout(() => navigate("/", 2000));
+      }
+    } catch (error) {
+      console.error("Invalid token:", error);
+      localStorage.removeItem("jwtToken");
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,6 +63,12 @@ function AddProduct() {
     console.log("submitting prod data:", product);
     console.log("image file:", image);
 
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("imageFile", image);
 
@@ -39,14 +80,16 @@ function AddProduct() {
     );
 
     axios
-      .post("/api/products", formData, {
+      .post("/api/admin/products", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
         console.log("Product added successfully", response.data);
         alert("Product added successfully");
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error adding product:", error);
