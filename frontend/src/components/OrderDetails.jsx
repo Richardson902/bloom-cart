@@ -25,7 +25,7 @@ function OrderDetails({
             </div>
           </div>
           <div className="col-md-2">
-            <span className="fw-bold d-block d-md-none">Date:</span>
+            <span className="fw-bold d-block d-md-none">Delivery Date:</span>
             <div className="d-flex align-items-center">
               <i className="bi bi-calendar text-bloom-secondary me-2"></i>
               <span>{formatDate(order.deliveryDate)}</span>
