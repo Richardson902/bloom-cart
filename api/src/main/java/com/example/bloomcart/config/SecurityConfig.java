@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/api/products/**", "/api/reviews/**").permitAll()
                         .requestMatchers("/api/users/**", "/api/orders/**").hasRole("CUSTOMER")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/orders/**").hasRole("AGENT")
                 )
                 .formLogin(Customizer.withDefaults())
