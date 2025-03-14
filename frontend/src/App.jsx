@@ -16,9 +16,9 @@ import { CartProvider, useCart } from "./context/CartContext";
 
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
-import axios from "axios";
-import CheckoutForm from "./components/CheckoutForm";
 import ConfirmOrder from "./pages/ConfirmOrder";
+import AdminDashboard from "./pages/AdminDashboard";
+import NotImplemented from "./pages/NotImplemented";
 
 //TODO: Clean up components, refactor into a more clean approach when not on time crunch
 
@@ -77,6 +77,8 @@ function AppContent({ selectedCategory, setSelectedCategory }) {
           }
         >
           <Route path="/admin/orders" element={<Orders />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/todo" element={<NotImplemented />} />
         </Route>
       </Routes>
     </BrowserRouter>

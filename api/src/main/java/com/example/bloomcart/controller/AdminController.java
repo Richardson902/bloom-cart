@@ -28,6 +28,12 @@ public class AdminController {
         this.orderService = orderService;
     }
 
+    @GetMapping("users")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
     @PutMapping("users/{id}")
     public ResponseEntity<UserDto> updateUserRole(@PathVariable("id") Long id, @RequestBody String role) {
         UserDto updatedUser = userService.updateUserRole(id, role);
