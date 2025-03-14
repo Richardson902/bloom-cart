@@ -34,7 +34,7 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping("users/{id}")
+    @PutMapping("users/{id}/role")
     public ResponseEntity<UserDto> updateUserRole(@PathVariable("id") Long id, @RequestBody String role) {
         UserDto updatedUser = userService.updateUserRole(id, role);
         return ResponseEntity.ok(updatedUser);

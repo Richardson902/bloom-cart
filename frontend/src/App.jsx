@@ -19,6 +19,7 @@ import "./App.css";
 import ConfirmOrder from "./pages/ConfirmOrder";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotImplemented from "./pages/NotImplemented";
+import AdminUsers from "./pages/AdminUsers";
 
 //TODO: Clean up components, refactor into a more clean approach when not on time crunch
 
@@ -62,6 +63,7 @@ function AppContent({ selectedCategory, setSelectedCategory }) {
         {/* Protected admin routes */}
         <Route element={<ProtectedRoute requiredRole="ROLE_ADMIN" />}>
           <Route path="/admin/products/add" element={<AddProduct />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
         </Route>
 
         {/* Customer routes */}
