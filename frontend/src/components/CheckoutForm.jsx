@@ -43,8 +43,9 @@ function CheckoutForm({ cartItems, subtotal, tax, total, clearCart }) {
       console.log("Order placed successfully", response.data);
 
       // Success handling
+      alert("Thank you for your order!");
       clearCart();
-      navigate("/order-confirmation", {
+      navigate("/order-invoice", {
         state: {
           orderNumber: response.data.id,
           recipientName: order.recipientName,
@@ -62,7 +63,7 @@ function CheckoutForm({ cartItems, subtotal, tax, total, clearCart }) {
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label htmlFor="recipientName" className="form-label">
-          Full Name
+          Recipient's Name
         </label>
         <input
           type="text"

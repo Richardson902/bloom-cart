@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
-function ProductDetail({ product, addToCart }) {
+function ProductDetail({ product }) {
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
@@ -23,7 +25,6 @@ function ProductDetail({ product, addToCart }) {
       };
 
       addToCart(cartItem);
-      alert("Product added to your cart!");
       navigate("/cart");
     }
   };

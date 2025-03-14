@@ -5,7 +5,7 @@ import ProductDetail from "../components/ProductDetail";
 import ReviewList from "../components/ReviewList";
 import ReviewForm from "../components/ReviewForm";
 
-function Product({ addToCart }) {
+function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
@@ -95,7 +95,7 @@ function Product({ addToCart }) {
 
   return (
     <div className="container my-5">
-      <ProductDetail product={product} addToCart={addToCart} />
+      <ProductDetail product={product} />
 
       {/* Reviews Section */}
       <div className="row mt-5">
