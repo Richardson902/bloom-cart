@@ -42,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
         if (orderDto.getDeliveryDate() == null || orderDto.getDeliveryDate().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Delivery date is invalid");
         }
+        
+        verifyProductStockAvailability(orderDto.getOrderItems());
 
         Order order = orderMapper.toEntity(orderDto);
         order.setStatus("PENDING");
@@ -49,9 +51,45 @@ public class OrderServiceImpl implements OrderService {
         if (orderDto.getOrderItems() != null && !orderDto.getOrderItems().isEmpty()) {
             order.setTotalPrice(calculateTotalPrice(orderDto.getOrderItems(), order));
         }
+        
+        updateProductStock(orderDto.getOrderItems());
 
         Order savedOrder = orderRepository.save(order);
         return orderMapper.toDto(savedOrder);
+    }
+    
+    private void verifyProductStockAvailability(Set<OrderItemDto> orderItems) {
+        if (orderItems == null || orderItems.isEmpty()) {
+            return;
+        }
+        
+        for (OrderItemDto orderItem : orderItems) {
+            var product = productRepository.findById(orderItem.getProductId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found" + orderItem.getProductId()));
+            
+            if (product.getStockQuantity() < orderItem.getQuantity()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough stock available");
+            }
+        }
+    }
+    
+    private void updateProductStock(Set<OrderItemDto> orderItems) {
+        if (orderItems == null || orderItems.isEmpty()) {
+            return;
+        }
+        
+        for (OrderItemDto orderItem : orderItems) {
+            var product = productRepository.findById(orderItem.getProductId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found" + orderItem.getProductId()));
+            
+            int newStock = product.getStockQuantity() - orderItem.getQuantity();
+            if (newStock < 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough stock available");
+            }
+            
+            product.setStockQuantity(newStock);
+            productRepository.save(product);
+        }
     }
 
     private BigDecimal calculateTotalPrice(Set<OrderItemDto> orderItemDtos, Order order) {

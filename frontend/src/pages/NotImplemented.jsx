@@ -45,6 +45,10 @@ function NotImplemented() {
                       <i className="bi bi-hourglass-split text-warning me-2"></i>
                       Fix styling issues
                     </li>
+                    <li className="list-group-item bg-transparent d-flex align-items-center">
+                      <i className="bi bi-hourglass-split text-warning me-2"></i>
+                      Squash the bugs
+                    </li>
                   </ul>
                 </div>
               </div>

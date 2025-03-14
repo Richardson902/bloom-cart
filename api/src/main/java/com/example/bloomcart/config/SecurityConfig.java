@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/products/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
                 )
-                .httpBasic(Customizer.withDefaults())
+                // .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

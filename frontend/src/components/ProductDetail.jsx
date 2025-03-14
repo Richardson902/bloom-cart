@@ -1,94 +1,165 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
-function ProductDetail({ product }) {
+function ProductDetail({ product, onStockWarning }) {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const navigate = useNavigate();
+
+  // Check if the product is out of stock
+  const isOutOfStock = product.stockQuantityQuantity === 0;
+
+  // Determine stock status for display
+  const getStockStatus = (stock) => {
+    if (stock === 0) return { label: "Out of Stock", class: "danger" };
+    if (stock <= 5) return { label: "Low Stock", class: "warning" };
+    return { label: "In Stock", class: "success" };
+  };
+
+  const stockStatus = getStockStatus(product.stockQuantity);
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
-    if (value >= 1) {
+    if (value > product.stockQuantity) {
+      onStockWarning(`Sorry, only ${product.stockQuantity} items available.`);
+      setQuantity(product.stockQuantity);
+    } else if (value < 1) {
+      setQuantity(1);
+    } else {
       setQuantity(value);
     }
   };
 
   const handleAddToCart = () => {
-    if (product && quantity > 0) {
-      const cartItem = {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        imageUrl: product.imageUrl,
-        quantity: quantity,
-      };
+    if (isOutOfStock) {
+      onStockWarning("This item is out of stock.");
+      return;
+    }
 
-      addToCart(cartItem);
-      navigate("/cart");
+    if (quantity > product.stockQuantity) {
+      onStockWarning(`Sorry, only ${product.stockQuantity} items available.`);
+      return;
+    }
+
+    addToCart(product, quantity);
+    onStockWarning(`Added ${quantity} item(s) to your cart.`);
+  };
+
+  const handleIncreaseQuantity = () => {
+    if (quantity < product.stockQuantity) {
+      setQuantity(quantity + 1);
+    } else {
+      onStockWarning(`Sorry, only ${product.stockQuantity} items available.`);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
     }
   };
 
   return (
-    <div className="row mb-5">
-      <div className="col-md-6">
-        <img
-          src={product.imageUrl}
-          alt={product.name}
-          className="img-fluid rounded shadow"
-        />
+    <div className="row">
+      {/* Product Image Column */}
+      <div className="col-md-6 mb-4">
+        <div className="product-image-container rounded overflow-hidden">
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="img-fluid product-detail-image"
+          />
+        </div>
       </div>
-      <div className="col-md-6">
-        <h1 className="text-bloom-primary mb-3">{product.name}</h1>
-        <p className="lead mb-4">{product.description}</p>
 
-        <div className="mb-4">
-          <h2 className="text-bloom-dark">${product.price}</h2>
+      {/* Product Info Column */}
+      <div className="col-md-6">
+        <h1 className="mb-3">{product.name}</h1>
+
+        {/* Stock Status Badge */}
+        <div className="mb-3">
+          <span className={`badge bg-${stockStatus.class} me-2`}>
+            {stockStatus.label}
+          </span>
+
+          {stockStatus.class === "warning" && (
+            <small className="text-warning">
+              Only {product.stockQuantity} left
+            </small>
+          )}
         </div>
 
+        <p className="text-muted mb-3">{product.description}</p>
+
+        <h3 className="text-bloom-primary mb-4">${product.price.toFixed(2)}</h3>
+
+        {/* Quantity Selector */}
         <div className="mb-4">
           <label htmlFor="quantity" className="form-label">
-            Quantity
+            Quantity:
           </label>
-          <div className="input-group" style={{ maxWidth: "200px" }}>
+          <div className="input-group" style={{ width: "150px" }}>
             <button
               className="btn btn-outline-secondary"
               type="button"
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              onClick={handleDecreaseQuantity}
+              disabled={quantity <= 1 || isOutOfStock}
             >
-              -
+              <i className="bi bi-dash"></i>
             </button>
             <input
               type="number"
               className="form-control text-center"
               id="quantity"
-              min="1"
               value={quantity}
               onChange={handleQuantityChange}
+              min="1"
+              max={product.stockQuantity}
+              disabled={isOutOfStock}
             />
             <button
               className="btn btn-outline-secondary"
               type="button"
-              onClick={() => setQuantity(quantity + 1)}
+              onClick={handleIncreaseQuantity}
+              disabled={quantity >= product.stockQuantity || isOutOfStock}
             >
-              +
+              <i className="bi bi-plus"></i>
             </button>
           </div>
+
+          {!isOutOfStock && (
+            <small className="form-text text-muted">
+              Maximum: {product.stockQuantity} items
+            </small>
+          )}
         </div>
 
-        <button
-          className="btn btn-bloom-primary btn-lg w-100 mb-3"
-          onClick={handleAddToCart}
-        >
-          Add to Cart
-        </button>
-
-        <button
-          className="btn btn-outline-secondary"
-          onClick={() => navigate("/")}
-        >
-          Back to Products
-        </button>
+        {/* Add to Cart and Back buttons */}
+        <div className="d-grid gap-2 d-md-flex">
+          <button
+            onClick={handleAddToCart}
+            className={`btn ${
+              isOutOfStock ? "btn-secondary" : "btn-bloom-primary"
+            } btn-lg me-md-2`}
+            disabled={isOutOfStock}
+          >
+            {isOutOfStock ? (
+              <>
+                <i className="bi bi-x-circle me-2"></i>
+                Out of Stock
+              </>
+            ) : (
+              <>
+                <i className="bi bi-cart-plus me-2"></i>
+                Add to Cart
+              </>
+            )}
+          </button>
+          <Link to="/" className="btn btn-outline-secondary btn-lg">
+            <i className="bi bi-arrow-left me-2"></i>
+            Back to Shopping
+          </Link>
+        </div>
       </div>
     </div>
   );

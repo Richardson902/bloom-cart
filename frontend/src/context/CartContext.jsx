@@ -33,20 +33,28 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   // Add item to cart
-  const addToCart = (newItem) => {
+  const addToCart = (product, quantity = 1) => {
     setCartItems((prevItems) => {
-      const existingItemIndex = prevItems.findIndex(
-        (item) => item.id === newItem.id
-      );
+      // Check if product already exists in cart
+      const existingItem = prevItems.find((item) => item.id === product.id);
+      const currentQuantity = existingItem ? existingItem.quantity : 0;
 
-      if (existingItemIndex !== -1) {
-        // If the product exists, update the quantity
-        const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += newItem.quantity;
-        return updatedItems;
+      // Calculate new total quantity
+      const newQuantity = currentQuantity + quantity;
+
+      // Check if adding would exceed available stock
+      if (newQuantity > product.stock) {
+        // Return unchanged cart if attempting to exceed stock
+        return prevItems;
+      }
+
+      // Add to cart if stock is sufficient
+      if (existingItem) {
+        return prevItems.map((item) =>
+          item.id === product.id ? { ...item, quantity: newQuantity } : item
+        );
       } else {
-        // If does not exist, add to cart
-        return [...prevItems, newItem];
+        return [...prevItems, { ...product, quantity }];
       }
     });
   };

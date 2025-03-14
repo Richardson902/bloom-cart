@@ -12,6 +12,7 @@ function Product() {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [stockWarning, setStockWarning] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -66,6 +67,13 @@ function Product() {
     setReviews([...reviews, newReview]);
   };
 
+  // Create stock warning handler
+  const handleStockWarning = (message) => {
+    setStockWarning(message);
+    // Auto-clear message after 3 seconds
+    setTimeout(() => setStockWarning(""), 3000);
+  };
+
   if (isLoading) {
     return (
       <div className="container text-center my-5">
@@ -95,7 +103,19 @@ function Product() {
 
   return (
     <div className="container my-5">
-      <ProductDetail product={product} />
+      {/* Display stock warning message */}
+      {stockWarning && (
+        <div
+          className={`alert ${
+            stockWarning.includes("Added") ? "alert-success" : "alert-warning"
+          } mb-4`}
+        >
+          {stockWarning}
+        </div>
+      )}
+
+      {/* Pass the onStockWarning function to ProductDetail */}
+      <ProductDetail product={product} onStockWarning={handleStockWarning} />
 
       {/* Reviews Section */}
       <div className="row mt-5">
