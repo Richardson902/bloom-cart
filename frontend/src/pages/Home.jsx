@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import ProductList from "../components/ProductList";
 
 function Home({ selectedCategory }) {
   const [products, setProducts] = useState([]);
@@ -54,7 +54,7 @@ function Home({ selectedCategory }) {
         }
       });
     };
-  }, []); // No dependency on data anymore
+  }, []);
 
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
@@ -107,56 +107,12 @@ function Home({ selectedCategory }) {
             Bloom Cart Flower Shop
           </h1>
           <p className="lead text-center mb-5">
-            Discover our {getCategoryHeading(selectedCategory)}
+            Discover our {getCategoryHeading()}
           </p>
         </div>
       </div>
 
-      <div className="row g-4">
-        {filteredProducts.length === 0 ? (
-          <div className="col-12 text-center">
-            <p className="text-muted">
-              No flowers available at the moment. Please check back soon!
-            </p>
-          </div>
-        ) : (
-          filteredProducts.map((product) => (
-            <div key={product.id} className="col-md-6 col-lg-4">
-              <Link
-                to={`/products/${product.id}`}
-                className="text-decoration-none"
-              >
-                <div className="card h-100 border-bloom-secondary shadow-sm hover-shadow">
-                  {product.imageUrl && (
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="card-img-top"
-                      style={{ height: "200px", objectFit: "cover" }}
-                    />
-                  )}
-                  <div className="card-body bg-bloom-light">
-                    <h5 className="card-title text-bloom-primary">
-                      {product.name}
-                    </h5>
-                    <p className="card-text text-muted small">
-                      {product.description}
-                    </p>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <span className="fw-bold text-bloom-dark">
-                        ${product.price}
-                      </span>
-                      <button className="btn btn-bloom-primary btn-sm">
-                        View Details
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ))
-        )}
-      </div>
+      <ProductList products={filteredProducts} />
     </div>
   );
 }
