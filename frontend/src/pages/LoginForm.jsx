@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import authService from "../services/authService";
 
 function LoginForm() {
   const [formData, setFormData] = useState({
@@ -22,27 +23,18 @@ function LoginForm() {
     setError("");
 
     try {
-      const loginCredentials = {
-        email: formData.email,
-        password: formData.password,
-      };
+      const result = await authService.login(formData.email, formData.password);
 
-      const response = await axios.post("/api/auth/login", loginCredentials);
-
-      const token = response.data;
-
-      localStorage.setItem("jwtToken", token);
-
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-      navigate("/");
-    } catch (error) {
-      if (error.response && error.response.data) {
-        setError(error.response.data.message || "Login failed");
+      if (result.success) {
+        navigate("/");
       } else {
-        setError("Login failed. Please try again later.");
+        setError(result.error);
       }
+    } catch (error) {
+      setError("Login failed. Please try again later.");
       console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -73,9 +73,40 @@ const authService = {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   },
 
+  login: async (email, password) => {
+    try {
+      const loginCredentials = {
+        email,
+        password,
+      };
+
+      const response = await axios.post("/api/auth/login", loginCredentials);
+      const token = response.data;
+
+      authService.setToken(token);
+
+      window.dispatchEvent(new Event("auth-change"));
+
+      return {
+        success: true,
+        user: authService.getCurrentUser(),
+      };
+    } catch (error) {
+      let errorMessage = "Login failed. Please try again later.";
+      if (error.response && error.response.data) {
+        errorMessage = error.response.data.message || errorMessage;
+      }
+      return {
+        success: false,
+        error: errorMessage,
+      };
+    }
+  },
+
   logout: () => {
     localStorage.removeItem("jwtToken");
     delete axios.defaults.headers.common["Authorization"];
+    window.dispatchEvent(new Event("auth-change"));
   },
 
   getCurrentUser: () => {

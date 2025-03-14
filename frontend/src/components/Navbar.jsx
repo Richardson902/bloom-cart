@@ -1,13 +1,42 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import authService from "../services/authService";
 
 function Navbar({ setSelectedCategory, cartItemCount = 0 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
+
+  // Checks authentication status and updates component state
+  const checkAuth = () => {
+    const isAuth = authService.isAuthenticated();
+    setIsAuthenticated(isAuth);
+
+    if (isAuth) {
+      setCurrentUser(authService.getCurrentUser());
+    } else {
+      setCurrentUser(null);
+    }
+  };
 
   useEffect(() => {
-    // Check authentication status from local storage
-    const authStatus = localStorage.getItem("isAuthenticated") === "true";
-    setIsAuthenticated(authStatus);
+    // Check auth status on initial render
+    checkAuth();
+
+    // Listen for auth-change events
+    const handleAuthChange = () => {
+      console.log("Auth change detected");
+      checkAuth();
+    };
+
+    // Listen for both storage and custom auth-change events
+    window.addEventListener("auth-change", handleAuthChange);
+    window.addEventListener("storage", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange);
+      window.removeEventListener("storage", handleAuthChange);
+    };
   }, []);
 
   const handleCategoryClick = (category) => {
@@ -16,11 +45,14 @@ function Navbar({ setSelectedCategory, cartItemCount = 0 }) {
 
   const handleLogout = () => {
     // Clear authentication data
-    localStorage.removeItem("token");
-    localStorage.removeItem("isAuthenticated");
+    authService.logout();
     setIsAuthenticated(false);
-    window.location.reload();
+    navigate("/");
   };
+
+  const isAdmin =
+    (currentUser && authService.hasRole("ROLE_ADMIN")) ||
+    authService.hasRole("AGENT");
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top bg-white border-bottom shadow-sm">
@@ -116,18 +148,16 @@ function Navbar({ setSelectedCategory, cartItemCount = 0 }) {
                 </li>
               </ul>
             </li>
-            {isAuthenticated && (
+
+            {/* Show Admin Dashboard link for admin/agent users */}
+            {isAdmin && (
               <li className="nav-item">
-                <Link to="/orders" className="nav-link">
-                  My Orders
+                <Link to="/admin/dashboard" className="nav-link">
+                  Dashboard
                 </Link>
               </li>
             )}
-            <li className="nav-item">
-              <Link to="/admin/products/add" className="nav-link">
-                Add Product
-              </Link>
-            </li>
+
             <li className="nav-item">
               <Link to="/cart" className="nav-link position-relative">
                 Cart
@@ -139,34 +169,24 @@ function Navbar({ setSelectedCategory, cartItemCount = 0 }) {
               </Link>
             </li>
 
-            {/* Authentication buttons - show login/register or logout based on auth state */}
-            {isAuthenticated ? (
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="userDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
+            {/* Account link for authenticated users */}
+            {isAuthenticated && (
+              <li className="nav-item">
+                <Link to="/todo" className="nav-link">
                   Account
-                </a>
-                <ul className="dropdown-menu" aria-labelledby="userDropdown">
-                  <li>
-                    <Link to="/profile" className="dropdown-item">
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <button className="dropdown-item" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </li>
-                </ul>
+                </Link>
+              </li>
+            )}
+
+            {/* Login/Register or Account dropdown with logout */}
+            {isAuthenticated ? (
+              <li className="nav-item">
+                <button
+                  onClick={handleLogout}
+                  className="nav-link btn btn-link"
+                >
+                  Logout
+                </button>
               </li>
             ) : (
               <>

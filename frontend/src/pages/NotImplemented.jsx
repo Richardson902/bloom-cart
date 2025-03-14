@@ -31,23 +31,28 @@ function NotImplemented() {
                   <ul className="list-group list-group-flush text-start">
                     <li className="list-group-item bg-transparent d-flex align-items-center">
                       <i className="bi bi-hourglass-split text-warning me-2"></i>
-                      Create product management
+                      Add product management
+                    </li>
+                    <li className="list-group-item bg-transparent d-flex align-items-center">
+                      <i className="bi bi-hourglass-split text-warning me-2"></i>
+                      Add missing pages
+                    </li>
+                    <li className="list-group-item bg-transparent d-flex align-items-center">
+                      <i className="bi bi-hourglass-split text-warning me-2"></i>
+                      Add Account management
+                    </li>
+                    <li className="list-group-item bg-transparent d-flex align-items-center">
+                      <i className="bi bi-hourglass-split text-warning me-2"></i>
+                      Fix styling issues
                     </li>
                   </ul>
                 </div>
               </div>
 
               <div className="d-flex justify-content-center mt-4">
-                <Link to="/" className="btn btn-bloom-primary btn-lg me-2">
+                <Link to="/" className="btn btn-bloom-secondary btn-lg me-2">
                   <i className="bi bi-house-door me-2"></i>
                   Back to Home
-                </Link>
-                <Link
-                  to="/admin/dashboard"
-                  className="btn btn-bloom-secondary btn-lg"
-                >
-                  <i className="bi bi-speedometer2 me-2"></i>
-                  Dashboard
                 </Link>
               </div>
 
