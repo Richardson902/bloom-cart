@@ -195,11 +195,6 @@ function Navbar({ setSelectedCategory, cartItemCount = 0 }) {
                     Login
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link to="/register" className="nav-link">
-                    Register
-                  </Link>
-                </li>
               </>
             )}
           </ul>

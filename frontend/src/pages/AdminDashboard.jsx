@@ -32,7 +32,7 @@ function AdminDashboard() {
               <h3 className="card-title">Products</h3>
               <p className="card-text">Add, edit, and manage products</p>
               <div className="d-grid gap-2">
-                <Link to="/admin/todo" className="btn btn-bloom-primary">
+                <Link to="/todo" className="btn btn-bloom-primary">
                   Manage Products
                 </Link>
                 <Link
