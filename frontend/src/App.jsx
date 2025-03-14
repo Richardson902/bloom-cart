@@ -15,6 +15,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
+import axios from "axios";
 
 //TODO: Clean up components, refactor into a more clean approach when not on time crunch
 
@@ -23,8 +24,17 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    authService.initializeAuth();
-  });
+    console.log(
+      "Before initializeAuth, axios headers:",
+      axios.defaults.headers.common
+    );
+    const authResult = authService.initializeAuth();
+    console.log("After initializeAuth, result:", authResult);
+    console.log(
+      "After initializeAuth, axios headers:",
+      axios.defaults.headers.common
+    );
+  }, []);
 
   const addToCart = (newItem) => {
     setCartItems((prevItems) => {

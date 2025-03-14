@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import authService from "../services/authService";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -10,6 +11,7 @@ function Orders() {
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
+    authService.initializeAuth();
     fetchOrders();
   }, []);
 

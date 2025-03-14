@@ -3,7 +3,9 @@ import { jwtDecode } from "jwt-decode";
 
 const authService = {
   initializeAuth: () => {
-    const token = localStorage.getItem("jtwToken");
+    delete axios.defaults.headers.common["Authorization"];
+
+    const token = localStorage.getItem("jwtToken");
 
     if (token) {
       try {

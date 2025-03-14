@@ -8,8 +8,15 @@ function ProtectedRoute({ requiredRole }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && !authService.hasRole(requiredRole)) {
-    return <Navigate to="/" replace />;
+  // Check if requiredRole is an array or a single role
+  if (requiredRole) {
+    const hasRequiredRole = Array.isArray(requiredRole)
+      ? authService.hasAnyRole(requiredRole)
+      : authService.hasRole(requiredRole);
+
+    if (!hasRequiredRole) {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <Outlet />;

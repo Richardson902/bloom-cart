@@ -46,10 +46,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/api/products/**", "/api/reviews/**").permitAll()
                         .requestMatchers("/api/users/**", "/api/orders/**").hasRole("CUSTOMER")
-                        .requestMatchers("/api/**").hasRole("ADMIN")
-                        .requestMatchers("/api/admin/orders/**").hasRole("AGENT")
+                        .requestMatchers("/api/admin/orders/**").hasAnyRole("ADMIN", "AGENT")
+                        .requestMatchers("/api/admin/products/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
                 )
-                .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
