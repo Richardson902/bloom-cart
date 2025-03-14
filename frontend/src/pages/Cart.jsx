@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import CheckoutForm from "./CheckoutForm";
+import CheckoutForm from "../components/CheckoutForm";
 
 function Cart({ cartItems, updateQuantity, removeItem, clearCart }) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);

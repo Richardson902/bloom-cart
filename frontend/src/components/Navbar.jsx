@@ -124,7 +124,7 @@ function Navbar({ setSelectedCategory, cartItemCount = 0 }) {
               </li>
             )}
             <li className="nav-item">
-              <Link to="/add_product" className="nav-link">
+              <Link to="/admin/products/add" className="nav-link">
                 Add Product
               </Link>
             </li>

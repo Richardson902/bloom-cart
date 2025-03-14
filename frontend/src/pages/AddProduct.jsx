@@ -1,33 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import authService from "../services/authService";
-import ProductForm from "./ProductForm";
+import ProductForm from "../components/ProductForm";
 
 function AddProduct() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!authService.isAuthenticated()) {
-      navigate("/login");
-      return;
-    }
-
-    if (!authService.hasRole("ROLE_ADMIN")) {
-      setError("You don't have permission to access this page");
-      setTimeout(() => navigate("/"), 2000);
-    }
-  }, [navigate]);
-
   const handleSubmit = ({ product, image }) => {
     setIsSubmitting(true);
-
-    if (!authService.isAuthenticated()) {
-      navigate("/login");
-      return;
-    }
 
     const formData = new FormData();
     formData.append("imageFile", image);

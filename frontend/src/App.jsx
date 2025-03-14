@@ -1,15 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import Home from "./components/Home";
-import AddProduct from "./components/AddProduct";
+import { useState, useEffect } from "react";
+
+import Home from "./pages/Home";
+import AddProduct from "./pages/AddProduct";
 import Navbar from "./components/Navbar";
 import Product from "./components/Product";
-import Cart from "./components/Cart";
-import OrderConfirmation from "./components/OrderConfirmation";
-import Orders from "./components/Orders";
+import Cart from "./pages/Cart";
+import OrderConfirmation from "./pages/OrderConfirmation";
+import Orders from "./pages/Orders";
+import LoginForm from "./pages/LoginForm";
+import RegisterForm from "./pages/RegisterForm";
+import authService from "./services/authService";
+import ProtectedRoute from "./routes/ProtectedRoute";
+
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import LoginForm from "./components/LoginForm";
-import RegisterForm from "./components/RegisterForm";
 import "./App.css";
 
 //TODO: Clean up components, refactor into a more clean approach when not on time crunch
@@ -17,6 +21,10 @@ import "./App.css";
 function App() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    authService.initializeAuth();
+  });
 
   const addToCart = (newItem) => {
     setCartItems((prevItems) => {
@@ -67,10 +75,13 @@ function App() {
         cartItemCount={cartItemCount}
       />
       <Routes>
+        {/* Public routes */}
         <Route
           path="/"
           element={<Home selectedCategory={selectedCategory} />}
         />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
         <Route
           path="/products/:id"
           element={<Product addToCart={addToCart} />}
@@ -86,11 +97,24 @@ function App() {
             />
           }
         />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/add_product" element={<AddProduct />} />
-        <Route path="/order-confirmation" element={<OrderConfirmation />} />
-        <Route path="/orders" element={<Orders />} />
+        {/* Protected admin routes */}
+        <Route element={<ProtectedRoute requiredRole="ROLE_ADMIN" />}>
+          <Route path="/admin/products/add" element={<AddProduct />} />
+        </Route>
+
+        {/* Customer routes */}
+        <Route element={<ProtectedRoute requiredRole="ROLE_CUSTOMER" />}>
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        </Route>
+
+        {/* Admin/Agent routes */}
+        <Route
+          element={
+            <ProtectedRoute requiredRole={["ROLE_ADMIN", "ROLE_AGENT"]} />
+          }
+        >
+          <Route path="/admin/orders" element={<Orders />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
