@@ -51,6 +51,7 @@ docker compose up --build
 ## Technologies Used
 - **Spring Boot**
 - **Spring Security**
+- **JWT**
 - **React**
 - **Vite**
 - **Nginx**
